@@ -20,9 +20,9 @@ SMTP_USERNAME = "kata.chatbot@gmail.com"
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
 LANGUAGE = {
-    "zh": {
-        "email_subject": "您的投资人洞察报告",
-        "report_title": "🎯 投资人洞察报告"
+    "tw": {
+        "email_subject": "您的投資人洞察報告",
+        "report_title": "🎯 投資人洞察報告"
     }
 }
 
@@ -64,18 +64,18 @@ def send_email(html_body, subject):
 def generate_chart_metrics():
     return [
         {
-            "title": "市场定位",
-            "labels": ["品牌记忆度", "客户契合度", "声誉粘性"],
+            "title": "市場定位",
+            "labels": ["品牌記憶度", "客戶契合度", "聲譽黏性"],
             "values": [random.randint(70, 90), random.randint(65, 85), random.randint(70, 90)]
         },
         {
-            "title": "投资吸引力",
-            "labels": ["故事信心度", "扩展性模型", "信任证明度"],
+            "title": "投資吸引力",
+            "labels": ["故事信心度", "擴展性模型", "信任證明度"],
             "values": [random.randint(70, 85), random.randint(60, 80), random.randint(75, 90)]
         },
         {
-            "title": "战略执行力",
-            "labels": ["合作准备度", "高端通路运用", "领导影响力"],
+            "title": "戰略執行力",
+            "labels": ["合作準備度", "高端通路運用", "領導影響力"],
             "values": [random.randint(65, 85), random.randint(65, 85), random.randint(75, 90)]
         }
     ]
@@ -101,16 +101,16 @@ def build_dynamic_summary(age, experience, industry, country, metrics):
     conf, scale, trust = metrics[1]["values"]
     partn, luxury, leader = metrics[2]["values"]
     return (
-        "<br><div style='font-size:24px;font-weight:bold;'>🧠 策略总结：</div><br>"
-        f"<p style='line-height:1.7;'>在 {country} 的 {industry} 行业中，拥有 {experience} 年经验、年龄 {age} 岁的专业人士通常在市场定位方面表现稳健。品牌记忆度平均为 {brand}%，客户契合度为 {fit}%，声誉粘性为 {stick}%。</p>"
-        f"<p style='line-height:1.7;'>在区域投资人心中，故事信心度（{conf}%）与信任证明（{trust}%）是吸引投资的关键因素。扩展性模型得分 {scale}%，代表还有成长空间。</p>"
-        f"<p style='line-height:1.7;'>合作准备度为 {partn}%、高端通路运用为 {luxury}%、领导影响力为 {leader}% —— 这些体现了具备国际化执行力与影响力的潜质。</p>"
-        f"<p style='line-height:1.7;'>综合比较新加坡、马来西亚和台湾的同行趋势，您在该领域展现出显著的战略优势与投资吸引力。</p>"
+        "<br><div style='font-size:24px;font-weight:bold;'>🧠 策略總結：</div><br>"
+        f"<p style='line-height:1.7;'>在 {country} 的 {industry} 行業中，擁有 {experience} 年經驗、年齡 {age} 歲的專業人士通常在市場定位方面表現穩健。品牌記憶度平均為 {brand}%，客戶契合度為 {fit}%，聲譽黏性為 {stick}%。</p>"
+        f"<p style='line-height:1.7;'>在區域投資人心中，故事信心度（{conf}%）與信任證明（{trust}%）是吸引投資的關鍵因素。擴展性模型得分 {scale}%，代表還有成長空間。</p>"
+        f"<p style='line-height:1.7;'>合作準備度為 {partn}%、高端通路運用為 {luxury}%、領導影響力為 {leader}% —— 這些體現了具備國際化執行力與影響力的潛質。</p>"
+        f"<p style='line-height:1.7;'>綜合比較新加坡、馬來西亞和台灣的同行趨勢，您在該領域展現出顯著的戰略優勢與投資吸引力。</p>"
     )
 
 # === Endpoint ===
-@app.route("/investor_analyze_zh", methods=["POST"])
-def investor_analyze_zh():
+@app.route("/investor_analyze_tw", methods=["POST"])
+def investor_analyze_tw():
     try:
         data = request.get_json(force=True)
         logging.debug(f"POST received: {data}")
@@ -137,30 +137,30 @@ def investor_analyze_zh():
         summary_html = build_dynamic_summary(age, experience, industry, country, chart_metrics)
 
         prompt = (
-            f"你是一位商业顾问，请为在{country}从事{industry}行业、有{experience}年经验的专业人士，"
-            "撰写10条具创意、富启发性的吸引投资人技巧，每条以表情符号开头。语言用简体中文，风格轻松、实用。"
+            f"你是一位商業顧問，請為在{country}從事{industry}行業、有{experience}年經驗的專業人士，"
+            "撰寫10條具創意、富啟發性的吸引投資人技巧，每條以表情符號開頭。語言用繁體中文，風格輕鬆、實用。"
         )
         tips_text = get_openai_response(prompt)
         if tips_text:
-            tips_block = "<br><div style='font-size:24px;font-weight:bold;'>💡 创意建议：</div><br>" + \
+            tips_block = "<br><div style='font-size:24px;font-weight:bold;'>💡 創意建議：</div><br>" + \
                          "<br>".join(f"<p style='font-size:16px;'>{line.strip()}</p>" for line in tips_text.splitlines() if line.strip())
         else:
-            tips_block = "<p style='color:red;'>⚠️ 无法生成创意建议，请稍后重试。</p>"
+            tips_block = "<p style='color:red;'>⚠️ 無法產生創意建議，請稍後重試。</p>"
 
         footer = (
             "<div style='background-color:#f9f9f9;color:#333;padding:20px;border-left:6px solid #8C52FF;"
             "border-radius:8px;margin-top:30px;'>"
-            "<strong>📊 本报告基于以下来源：</strong>"
+            "<strong>📊 本報告基於以下來源：</strong>"
             "<ul style='margin-top:10px;margin-bottom:10px;padding-left:20px;line-height:1.7;'>"
-            "<li>新加坡、马来西亚、台湾地区的专业人士匿名数据</li>"
-            "<li>OpenAI 投资趋势模型 + 区域市场洞察</li></ul>"
-            "<p style='margin-top:10px;line-height:1.7;'>本分析符合 PDPA 合规标准，所有资料仅用于统计模型，不会存储个人记录。</p>"
+            "<li>新加坡、馬來西亞、台灣地區的專業人士匿名數據</li>"
+            "<li>OpenAI 投資趨勢模型 + 區域市場洞察</li></ul>"
+            "<p style='margin-top:10px;line-height:1.7;'>本分析符合 PDPA 合規標準，所有資料僅用於統計模型，不會儲存個人記錄。</p>"
             "<p style='margin-top:10px;line-height:1.7;'>"
-            "<strong>附注：</strong> 此为初步洞察，我们将在 24 至 48 小时内发送更完整的定制报告。"
-            "若您想加速获取建议，也可预约 15 分钟私人通话服务。🎯</p></div>"
+            "<strong>附註：</strong> 此為初步洞察，我們將在 24 至 48 小時內發送更完整的定制報告。"
+            "若您想加速獲取建議，也可預約 15 分鐘私人通話服務。🎯</p></div>"
         )
 
-        title = f"<h4 style='text-align:center;font-size:24px;'>{LANGUAGE['zh']['report_title']}</h4>"
+        title = f"<h4 style='text-align:center;font-size:24px;'>{LANGUAGE['tw']['report_title']}</h4>"
 
         details = (
             f"<br><div style='font-size:14px;color:#666;'>"
@@ -168,27 +168,27 @@ def investor_analyze_zh():
             f"英文名: {full_name}<br>"
             f"中文名: {chinese_name}<br>"
             f"出生日期: {dob}<br>"
-            f"国家: {country}<br>"
+            f"國家: {country}<br>"
             f"公司: {company}<br>"
-            f"职位: {role}<br>"
-            f"经验年数: {experience}<br>"
-            f"行业: {industry}<br>"
-            f"挑战: {challenge}<br>"
-            f"背景说明: {context}<br>"
-            f"目标对象: {target}<br>"
-            f"推荐人: {advisor}<br>"
-            f"邮箱: {email}</div><br>"
+            f"職位: {role}<br>"
+            f"經驗年數: {experience}<br>"
+            f"行業: {industry}<br>"
+            f"挑戰: {challenge}<br>"
+            f"背景說明: {context}<br>"
+            f"目標對象: {target}<br>"
+            f"推薦人: {advisor}<br>"
+            f"電郵: {email}</div><br>"
         )
 
         full_html = title + details + chart_html + summary_html + tips_block + footer
-        send_email(full_html, LANGUAGE['zh']['email_subject'])
+        send_email(full_html, LANGUAGE['tw']['email_subject'])
 
         return jsonify({"html_result": title + chart_html + summary_html + tips_block + footer})
 
     except Exception as e:
-        logging.error(f"investor_analyze_zh error: {e}")
+        logging.error(f"investor_analyze_tw error: {e}")
         traceback.print_exc()
-        return jsonify({"error": "服务器错误，请稍后再试"}), 500
+        return jsonify({"error": "伺服器錯誤，請稍後再試"}), 500
 
 # === Run Server Locally ===
 if __name__ == "__main__":
