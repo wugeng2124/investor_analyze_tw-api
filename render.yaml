@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: ""
-    startCommand: gunicorn investor_analyze_zh:app
+    startCommand: gunicorn investor_analyze_tw:app
     envVars:
       - key: OPENAI_API_KEY
         sync: false
